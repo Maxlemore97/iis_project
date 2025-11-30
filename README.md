@@ -122,19 +122,10 @@ Example TREC structure supported:
 
 # 🔎 **7. Running Bulk Queries (50+ queries)**
 
-Create a text file containing one query per line:
-
-```
-pirate king
-ruby on rails tutorial
-weather forecast
-...
-```
-
-Run:
+Place your file anywhere, then run:
 
 ```bash
-rake search:run
+rake search:run FILE=path/to/data.trec
 ```
 
 This executes every query sequentially and prints hit counts.
@@ -175,59 +166,6 @@ GET /search?q=pirate+king
   }
 ]
 ```
-
----
-
-## **GET /documents/:id**
-
-### **Fetch a single document**
-
-```
-GET /documents/42
-```
-
-Returns the document stored in PostgreSQL.
-
----
-
-## **POST /documents**
-
-### **Create a document manually**
-
-**Request body (JSON):**
-
-```json
-{
-  "document": {
-    "trec_id": "DOC900",
-    "title": "New Title",
-    "body": "Document text here."
-  }
-}
-```
-
-**Response:**
-
-```json
-{
-  "status": "created",
-  "id": 900
-}
-```
-
----
-
-## **POST /reindex**
-
-### **Force reindex all documents into Elasticsearch**
-
-Call:
-
-```
-POST /reindex
-```
-
-This is useful after imports or schema changes.
 
 ---
 
