@@ -1,5 +1,5 @@
 namespace :trec do
-  desc "Import TREC file"
+  desc "Import TREC .trec file (recordId + text format)"
   task import: :environment do
     file = ENV["FILE"]
 
@@ -8,21 +8,22 @@ namespace :trec do
       exit
     end
 
-    require 'nokogiri'
+    require "nokogiri"
 
     puts "Importing #{file}..."
 
     xml = Nokogiri::XML(File.read(file))
 
     xml.xpath("//DOC").each do |doc|
-      trec_id = doc.xpath("DOCNO").text.strip
-      title   = doc.xpath("TITLE").text.strip rescue nil
-      body    = doc.xpath("TEXT").text.strip rescue nil
+      trec_id = doc.at_xpath("recordId")&.text&.strip
+      text    = doc.at_xpath("text")&.text&.strip
+
+      next if trec_id.nil? || text.nil?
 
       Document.create!(
         trec_id: trec_id,
-        title:   title,
-        body:    body
+        title:   text.lines.first.strip,   # first line becomes title
+        body:    text                      # full content
       )
     end
 
