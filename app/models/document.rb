@@ -17,11 +17,20 @@ class Document < ApplicationRecord
   } do
     mappings dynamic: false do
       indexes :trec_id, type: :keyword
-      indexes :title, type: :text, analyzer: "custom_english"
-      indexes :body, type: :text, analyzer: "custom_english"
+      indexes :title,   type: :text, analyzer: "custom_english"
+      indexes :body,    type: :text, analyzer: "custom_english"
+
+      # --------------------------------------------------
+      # ✅ 4-DIMENSIONAL STYLE VECTOR
+      # --------------------------------------------------
+      indexes :style_vec,
+              type: :dense_vector,
+              dims: 4,
+              index: true,
+              similarity: :cosine
     end
   end
 end
 
-# Create and import index if needed
+# Create the index if not already created
 Document.__elasticsearch__.create_index!

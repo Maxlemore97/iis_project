@@ -12,6 +12,9 @@ Rails.application.routes.draw do
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
 
   get "search" => "documents#search"
+  get "search_style" => "documents#search_style"
+  get "search_hybrid", to: "documents#search_hybrid"
+
 
   # Defines the root path route ("/")
   # root "posts#index"

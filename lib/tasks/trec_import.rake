@@ -1,5 +1,5 @@
 namespace :trec do
-  desc "Import TREC .trec file (recordId + text format)"
+  desc "Import TREC .trec file (recordId + text + style_vec)"
   task import: :environment do
     file = ENV["FILE"]
 
@@ -20,10 +20,20 @@ namespace :trec do
 
       next if trec_id.nil? || text.nil?
 
+      # ✅ NEW — extract <style_vec>
+      vec_node = doc.at_xpath("style_vec")
+      style_vec =
+        if vec_node
+          vec_node.text.strip.split(",").map(&:to_f)
+        else
+          nil
+        end
+
       Document.create!(
-        trec_id: trec_id,
-        title:   text.lines.first.strip,   # first line becomes title
-        body:    text                      # full content
+        trec_id:   trec_id,
+        title:     text.lines.first.strip,
+        body:      text,
+        style_vec: style_vec
       )
     end
 
