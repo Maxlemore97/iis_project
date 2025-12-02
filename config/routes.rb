@@ -5,18 +5,22 @@ Rails.application.routes.draw do
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check
 
-  get "home" => "documents#index", as: :documents_home
+  root "home#index"
+
+  post "upload_trec", to: "home#upload_trec"
+  delete "delete_all_documents", to: "home#delete_all"
+
+  post "upload_query_trec", to: "home#upload_query_trec"
+  delete "delete_all_queries", to: "home#delete_all_queries"
 
   # Render dynamic PWA files from app/views/pwa/*
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   get "/vectors", to: "vectors#index"
 
-
-  get "search" => "documents#search"
+  get "documents" => "documents#index"
   get "search_style" => "documents#search_style"
   get "search_hybrid", to: "documents#search_hybrid"
-
 
   # Defines the root path route ("/")
   # root "posts#index"

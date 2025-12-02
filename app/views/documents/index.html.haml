@@ -3,23 +3,44 @@
     .col-md-8
       %h1.mb-3 Documents
 
-      = form_with url: "/search", method: :get, local: true, class: "d-flex gap-2" do |f|
-        = f.text_field :q, placeholder: "Search documents...", class: "form-control"
+      = form_with url: documents_path, method: :get, local: true, class: "d-flex gap-2" do |f|
+        = f.select :query_id,
+            @queries.map { |q| [ "#{q.trec_id} – #{q.title.truncate(50)}", q.id ] },
+            { include_blank: "Select a query…" },
+            class: "form-select"
+
         = f.submit "Search", class: "btn btn-primary"
+
+  - if @searched
+    %h5.mt-3.mb-3
+      = "Search results for query ##{@query_doc.trec_id}"
+      %span.badge.bg-secondary= "#{@documents.size} hits"
+
+      %p.text-muted.mt-2
+        %strong Query Text:
+        = @query[0..200]
+        - if @query.length > 200
+          %em … truncated …
+
+  - else
+    %h5.mt-3.mb-3.text-muted
+      Showing 20 random documents
 
   - if @documents.any?
     .list-group
       - @documents.each do |doc|
         .list-group-item
-          %h5.mb-1
-            = doc.title.presence || "Untitled Document"
+          %h5.mb-1= doc.title.presence || "Untitled Document"
 
           %small.text-muted
-            Record ID:
-            = doc.trec_id
+            Record ID: #{doc.trec_id}
+
+            - if @searched
+              · Score:
+              %span.badge.bg-info.text-dark= doc.score.round(3)
 
           %p.mt-2.mb-1
             = truncate(doc.body, length: 200)
   - else
     .alert.alert-info
-      No documents found in the database.
+      No documents found.

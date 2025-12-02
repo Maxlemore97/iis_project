@@ -1,0 +1,76 @@
+.container.py-5
+  %h1.mb-4.text-center Document Management
+
+  - if flash[:notice]
+    .alert.alert-success= flash[:notice]
+  - if flash[:alert]
+    .alert.alert-danger= flash[:alert]
+
+  .row.g-4
+
+    / ================================
+    /   DOCUMENT IMPORT CARD
+    / ================================
+    .col-md-6
+      .card.shadow-sm
+        .card-header.bg-primary.text-white
+          %h5.mb-0
+            %i.bi.bi-upload.me-1
+            Upload TREC Documents
+
+        .card-body
+          %p.text-muted
+            Upload a <code>.trec</code> file to import <strong>Documents</strong> with style vectors.
+
+          = form_with url: upload_trec_path, local: true, method: :post, multipart: true do |f|
+            .mb-3
+              = f.label :file, "Choose .trec file", class: "form-label"
+              = f.file_field :file, accept: ".trec", class: "form-control"
+
+            = f.submit "Upload & Import", class: "btn btn-primary mt-2 w-100"
+
+
+    / ================================
+    /   QUERY IMPORT CARD
+    / ================================
+    .col-md-6
+      .card.shadow-sm
+        .card-header.bg-secondary.text-white
+          %h5.mb-0
+            %i.bi.bi-search.me-1
+            Upload Query TREC
+
+        .card-body
+          %p.text-muted
+            Upload a <code>.trec</code> file to import <strong>QueryDocuments</strong>
+            for evaluation and scoring.
+
+          = form_with url: upload_query_trec_path, method: :post, local: true, multipart: true do |f|
+            .mb-3
+              = f.label :query_file, "Choose query .trec file", class: "form-label"
+              = f.file_field :query_file, accept: ".trec", class: "form-control"
+
+            = f.submit "Upload Queries", class: "btn btn-secondary mt-2 w-100"
+
+
+  %hr.my-5
+
+  / ================================
+  /   DANGER ZONE
+  / ================================
+  .card.border-danger.shadow-sm
+    .card-header.bg-danger.text-white
+      %h5.mb-0
+        %i.bi.bi-exclamation-triangle.me-1
+        Danger Zone
+
+    .card-body
+      %p.text-danger.fw-bold
+        This will permanently delete <u>all</u> documents from the database.
+        This cannot be undone.
+
+      = button_to "Delete ALL Documents",
+        delete_all_documents_path,
+        method: :delete,
+        class: "btn btn-danger w-100",
+        data: { confirm: "Are you absolutely sure you want to delete ALL documents?" }
