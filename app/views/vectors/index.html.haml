@@ -2,13 +2,13 @@
   %h1.mb-4 Style Vector Visualization
 
   %p.text-muted
-    Below you see 10 randomly selected documents with their ID, title,
-    body snippet, and a score extracted from their style vector.
+    Below you see 2 documents with efficient, precomputed explanations.
 
   .accordion#vectorAccordion
-    - @documents.each_with_index do |doc, i|
-      - vec = doc.style_vec || []
-      - score = vec[3] || 0    # readability as score
+    - @documents.each_with_index do |d, i|
+      - doc = d[:record]
+      - vec = d[:vec]
+      - ttr, avg_sentence_len, pronoun_ratio, readability = vec
 
       .accordion-item
         %h2.accordion-header{id: "heading-#{i}"}
@@ -17,7 +17,7 @@
             data: { bs_toggle: "collapse", bs_target: "#collapse-#{i}" },
             aria: { expanded: "false", controls: "collapse-#{i}" }
           }
-            = "Document ##{doc.id} — #{doc.title.truncate(60)}"
+            = "Document ##{doc.id} — #{doc.title}"
 
         .accordion-collapse.collapse{
           id: "collapse-#{i}",
@@ -25,6 +25,7 @@
           data: { bs_parent: "#vectorAccordion" }
         }
           .accordion-body
+
             %p
               %strong ID:
               = doc.id
@@ -34,12 +35,72 @@
               = doc.title
 
             %p
-              %strong Body:
-              = doc.body.truncate(200)
+              %strong Body (preview):
+              = d[:preview]
+              - if doc.body.length > 200
+                %em.text-muted … truncated …
+
+            %hr
+
+            %h5.mb-3 Style Vector (Explained)
+
+            %h6.mt-3 Type–Token Ratio (TTR)
+            %p
+              %strong Value:
+              = ttr.round(4)
 
             %p
-              %strong Score (Readability):
-              = score.round(3)
+              %strong Total words:
+              = d[:words_count]
+
+            %p
+              %strong Unique words (top 50 by frequency):
+              %br
+              %span.text-muted= "(showing word → count)"
+            %ul
+              - d[:top_unique].each do |uw|
+                %li= "#{uw[:word]} → #{uw[:count]}×"
+
+            %p.mt-1.text-muted
+              %em= "Total unique words: #{d[:unique_count]}"
+
+            %hr
+            %h6 Avg Sentence Length (first 5 sentences)
+            %p
+              %strong Value:
+              = avg_sentence_len.round(3)
+
+            %ul
+              - d[:sentences].each do |s|
+                %li
+                  %strong= "\"#{s[:text]}\""
+                  = " → #{s[:wc]} words"
+
+            %hr
+
+            %p
+              %strong Pronoun Count:
+              = d[:pronoun_count]
+
+            %p
+              %strong Pronoun Ratio:
+              = pronoun_ratio.round(4)
+              %br
+              %small.text-muted= "pronoun_count / total_words = #{d[:pronoun_count]} / #{d[:words_count]}"
+
+
+            %p
+              %strong Highlighted preview:
+            %p= d[:highlighted_preview].html_safe
+
+            %hr
+
+            %h6 Flesch Reading Ease (Score)
+            %p
+              %strong Value:
+              = readability.round(3)
+
+            %hr
 
             %p.small.text-muted
               %strong Full Vector:
