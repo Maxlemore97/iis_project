@@ -6,10 +6,13 @@
     "autoprefixer": "^10.4.22",
     "bootstrap": "^5.3.8",
     "bootstrap-icons": "^1.13.1",
+    "chart.js": "^4.5.1",
     "nodemon": "^3.1.11",
     "postcss": "^8.5.6",
     "postcss-cli": "^11.0.1",
-    "sass": "^1.94.2"
+    "sass": "^1.94.2",
+    "vite": "^7.2.6",
+    "vite-plugin-ruby": "^5.1.1"
   },
   "scripts": {
     "build:css:compile": "sass ./app/assets/stylesheets/application.bootstrap.scss:./app/assets/builds/application.css --no-source-map --load-path=node_modules",

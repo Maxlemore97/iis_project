@@ -1,46 +1,60 @@
-# 📘 **SearchApp – Rails 7 + PostgreSQL + Elasticsearch**
+# 📘 **IIS Project – Rails 6.1 + PostgreSQL + Vite + Bootstrap**
 
-This project is a minimal search engine built with:
+This project is a miniature information-retrieval system featuring:
 
-* **Rails 7**
+* **Rails 6.1**
 * **PostgreSQL**
-* **Elasticsearch 8.x**
-* **elasticsearch-model / elasticsearch-rails**
-* Ability to **import .trec files** and **run multiple search queries for evaluation**
+* **Vite Ruby (JS bundler)**
+* **Bootstrap 5**
+* **Chart.js**
+* Ability to:
+
+    * **Import `.trec` files**
+    * **Auto-compute style vectors (TTR, sentence length, pronoun ratio, readability)**
+    * **Query documents via different scoring approaches**
+    * **Visualize vectors in the browser**
 
 ---
 
 # 🚀 **1. Requirements**
 
-* Ruby 3.x
-* Rails 7.x
-* PostgreSQL 13+
-* Elasticsearch 8.x (via Docker or tar.gz — *Homebrew not recommended*)
-* Docker (optional but recommended)
+Ensure the following are installed:
+
+* Ruby **3.3.x**
+* Rails **6.1**
+* PostgreSQL **13+**
+* Node.js / Bun
+* Yarn or npm
+* Vite Ruby (installed via Gemfile)
 
 ---
 
 # 🏗 **2. Installation**
 
-Clone the repo:
+Clone the project:
 
 ```bash
-git clone https://github.com/your-org/search_app.git
-cd search_app
+git clone https://github.com/your-org/iis_project.git
+cd iis_project
 ```
 
-Install dependencies:
+Install Ruby dependencies:
 
 ```bash
 bundle install
-yarn install --check-files
+```
+
+Install JavaScript dependencies (using Bun or Yarn):
+
+```bash
+bun install
+# or:
+yarn install
 ```
 
 ---
 
 # 🛢 **3. Database Setup**
-
-Ensure PostgreSQL is running, then:
 
 ```bash
 rails db:create
@@ -49,144 +63,150 @@ rails db:migrate
 
 ---
 
-# 🔍 **4. Start Elasticsearch (Docker recommended)**
+# 🎨 **4. Frontend Setup – Vite Ruby**
 
-`docker-compose.yml`:
-
-```yaml
-version: '3.7'
-
-services:
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.15.0
-    environment:
-      - discovery.type=single-node
-      - xpack.security.enabled=false
-    ports:
-      - "9200:9200"
-    mem_limit: 1g
-```
-
-Start it:
+### Start the Vite dev server:
 
 ```bash
-docker compose up -d
+bin/vite dev
 ```
 
-Verify:
+If needed, restart the Rails server afterward.
 
-```bash
-curl http://localhost:9200
+The frontend entrypoint is:
+
+```
+app/frontend/entrypoints/application.js
 ```
 
 ---
 
-# 🔧 **5. Initialize Elasticsearch Index**
+# 📥 **5. Importing a `.trec` File**
+
+Import any TREC XML file containing:
+
+```xml
+
+<DOC>
+  <recordId>DOC001</recordId>
+  <text>Full document text…</text>
+  <style_vec>1.0,4.3,0.05,60.2</style_vec> <!-- optional -->
+</DOC>
+```
 
 Run:
 
 ```bash
-rails runner "Document.__elasticsearch__.create_index!"
-rails runner "Document.import(force: true)"
+rake trec:import FILE=path/to/file.trec
 ```
 
-This creates the index and imports existing DB records if present.
+The task will:
+
+1. Parse the XML
+2. Compute style vectors if missing (`StyleFeatureService`)
+3. Store everything in PostgreSQL
+4. Reindex Document model (Searchkick-style or custom)
 
 ---
 
-# 📥 **6. Import a `.trec` File**
+# 📊 **6. Style Vector Extraction**
 
-Place your file anywhere, then run:
+Style vectors use:
+
+1. **TTR** (type-token ratio)
+2. **Avg sentence length**
+3. **Pronoun ratio**
+4. **Flesch readability score**
+
+Implemented in:
+
+```
+app/services/style_feature_service.rb
+```
+
+---
+
+# 🔎 **7. Search Modes**
+
+### **1. Lexical Search**
+
+```
+GET /search?q=keyword
+```
+
+### **2. Style-based Similarity Search**
+
+```
+GET /search_style?q=your text
+```
+
+### **3. Hybrid Search (lexical + vector score)**
+
+```
+GET /search_hybrid?q=your text
+```
+
+---
+
+# 🌐 **8. Application Routes**
+
+| Path             | Purpose                 |
+|------------------|-------------------------|
+| `/home`          | Document list           |
+| `/search`        | Lexical search          |
+| `/search_style`  | Vector-based search     |
+| `/search_hybrid` | Combined score          |
+| `/vectors`       | Vector visualization UI |
+
+Route definitions:
+
+```ruby
+get "home" => "documents#index", as: :documents_home
+get "vectors" => "vectors#index"
+
+get "search" => "documents#search"
+get "search_style" => "documents#search_style"
+get "search_hybrid" => "documents#search_hybrid"
+```
+
+---
+
+# 📊 **9. Vector Visualization UI**
+
+Accessible at:
+
+```
+/vectors
+```
+
+Displays:
+
+* Document ID
+* Title
+* Body (optional)
+* Extracted style vector
+* Mini-charts using **Chart.js** inside Bootstrap Accordions
+
+---
+
+# ▶️ **10. Start the Application**
+
+In one terminal:
 
 ```bash
-rake trec:import FILE=path/to/data.trec
+bin/vite dev
 ```
 
-This will:
-
-1. Parse the `.trec` XML
-2. Insert records into PostgreSQL
-3. Reindex them into Elasticsearch
-
-Example TREC structure supported:
-
-```xml
-<DOC>
-  <DOCNO>DOC001</DOCNO>
-  <TITLE>Sample title</TITLE>
-  <TEXT>This is the full document text.</TEXT>
-</DOC>
-```
-
----
-
-# 🔎 **7. Running Bulk Queries (50+ queries)**
-
-Place your file anywhere, then run:
-
-```bash
-rake search:run FILE=path/to/data.trec
-```
-
-This executes every query sequentially and prints hit counts.
-
----
-
-# 🌐 **8. API Endpoints**
-
-Below are all public endpoints exposed by the application.
-
----
-
-## **GET /search**
-
-### **Search for documents**
-
-**Query parameters:**
-
-| Param | Required | Description             |
-| ----- | -------- | ----------------------- |
-| `q`   | Yes      | The search query string |
-
-**Example:**
-
-```
-GET /search?q=pirate+king
-```
-
-**Response:**
-
-```json
-[
-  {
-    "id": 42,
-    "trec_id": "DOC123",
-    "title": "Pirate King Adventure",
-    "body": "A long time ago..."
-  }
-]
-```
-
----
-
-# ▶️ **9. Start the Application**
+In another:
 
 ```bash
 rails s
 ```
 
-Project will run at:
+Then visit:
 
 ```
-http://localhost:3000
-```
-
----
-
-# 🧪 **10. Running Tests (optional)**
-
-```bash
-bundle exec rspec
+http://localhost:3000/home
 ```
 
 ---
@@ -194,22 +214,24 @@ bundle exec rspec
 # 📚 **11. Directory Overview**
 
 ```
-app/models/document.rb       # TREC-backed searchable model
-lib/tasks/trec_import.rake   # TREC importer task
-lib/tasks/run_queries.rake   # bulk 50-query test
-app/controllers/documents    # REST endpoints
-app/controllers/search       # search endpoint
+app/models/document.rb             # Model storing trec_id, title, body, style_vec
+app/services/style_feature_service.rb
+app/controllers/documents_controller.rb
+app/controllers/vectors_controller.rb
+lib/tasks/trec_import.rake
+app/frontend/entrypoints/application.js
+app/views/vectors/index.html.haml  # Visualization UI
 ```
 
 ---
 
 # 🏁 **12. Summary**
 
-This project gives you:
+This project provides:
 
-✔ Rails 7 API
-✔ PostgreSQL persistence
-✔ Elasticsearch 8.x for full-text search
-✔ TREC document importer
-✔ Bulk query evaluator
-✔ Clean search endpoint and REST API
+✔ Import + processing of TREC documents
+✔ Style-feature vector extraction
+✔ Multiple search strategies
+✔ Beautiful Vite-powered frontend
+✔ Chart.js vector visualization
+✔ Clean Rails 6.1 backend

@@ -2,3 +2,609 @@
 # yarn lockfile v1
 
 
+"@esbuild/darwin-arm64@0.25.12":
+  version "0.25.12"
+  resolved "https://registry.npmjs.org/@esbuild/darwin-arm64/-/darwin-arm64-0.25.12.tgz"
+  integrity sha512-N3zl+lxHCifgIlcMUP5016ESkeQjLj/959RxxNYIthIg+CQHInujFuXeWbWMgnTo4cp5XVHqFPmpyu9J65C1Yg==
+
+"@kurkle/color@^0.3.0":
+  version "0.3.4"
+  resolved "https://registry.npmjs.org/@kurkle/color/-/color-0.3.4.tgz"
+  integrity sha512-M5UknZPHRu3DEDWoipU6sE8PdkZ6Z/S+v4dD+Ke8IaNlpdSQah50lz1KtcFBa2vsdOnwbbnxJwVM4wty6udA5w==
+
+"@nodelib/fs.scandir@2.1.5":
+  version "2.1.5"
+  resolved "https://registry.npmjs.org/@nodelib/fs.scandir/-/fs.scandir-2.1.5.tgz"
+  integrity sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==
+  dependencies:
+    "@nodelib/fs.stat" "2.0.5"
+    run-parallel "^1.1.9"
+
+"@nodelib/fs.stat@^2.0.2", "@nodelib/fs.stat@2.0.5":
+  version "2.0.5"
+  resolved "https://registry.npmjs.org/@nodelib/fs.stat/-/fs.stat-2.0.5.tgz"
+  integrity sha512-RkhPPp2zrqDAQA/2jNhnztcPAlv64XdhIp7a7454A5ovI7Bukxgt7MX7udwAu3zg1DcpPU0rz3VV1SeaqvY4+A==
+
+"@nodelib/fs.walk@^1.2.3":
+  version "1.2.8"
+  resolved "https://registry.npmjs.org/@nodelib/fs.walk/-/fs.walk-1.2.8.tgz"
+  integrity sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==
+  dependencies:
+    "@nodelib/fs.scandir" "2.1.5"
+    fastq "^1.6.0"
+
+"@parcel/watcher-darwin-arm64@2.5.1":
+  version "2.5.1"
+
+"@parcel/watcher@^2.4.1":
+  version "2.5.1"
+  dependencies:
+    detect-libc "^1.0.3"
+    is-glob "^4.0.3"
+    micromatch "^4.0.5"
+    node-addon-api "^7.0.0"
+  optionalDependencies:
+    "@parcel/watcher-android-arm64" "2.5.1"
+    "@parcel/watcher-darwin-arm64" "2.5.1"
+    "@parcel/watcher-darwin-x64" "2.5.1"
+    "@parcel/watcher-freebsd-x64" "2.5.1"
+    "@parcel/watcher-linux-arm-glibc" "2.5.1"
+    "@parcel/watcher-linux-arm-musl" "2.5.1"
+    "@parcel/watcher-linux-arm64-glibc" "2.5.1"
+    "@parcel/watcher-linux-arm64-musl" "2.5.1"
+    "@parcel/watcher-linux-x64-glibc" "2.5.1"
+    "@parcel/watcher-linux-x64-musl" "2.5.1"
+    "@parcel/watcher-win32-arm64" "2.5.1"
+    "@parcel/watcher-win32-ia32" "2.5.1"
+    "@parcel/watcher-win32-x64" "2.5.1"
+
+"@popperjs/core@^2.11.8":
+  version "2.11.8"
+
+"@rollup/rollup-darwin-arm64@4.53.3":
+  version "4.53.3"
+  resolved "https://registry.npmjs.org/@rollup/rollup-darwin-arm64/-/rollup-darwin-arm64-4.53.3.tgz"
+  integrity sha512-Nr7SlQeqIBpOV6BHHGZgYBuSdanCXuw09hon14MGOLGmXAFYjx1wNvquVPmpZnl0tLjg25dEdr4IQ6GgyToCUA==
+
+"@types/estree@1.0.8":
+  version "1.0.8"
+  resolved "https://registry.npmjs.org/@types/estree/-/estree-1.0.8.tgz"
+  integrity sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==
+
+ansi-regex@^5.0.1:
+  version "5.0.1"
+
+ansi-styles@^4.0.0:
+  version "4.3.0"
+  dependencies:
+    color-convert "^2.0.1"
+
+anymatch@~3.1.2:
+  version "3.1.3"
+  dependencies:
+    normalize-path "^3.0.0"
+    picomatch "^2.0.4"
+
+autoprefixer@^10.4.22:
+  version "10.4.22"
+  dependencies:
+    browserslist "^4.27.0"
+    caniuse-lite "^1.0.30001754"
+    fraction.js "^5.3.4"
+    normalize-range "^0.1.2"
+    picocolors "^1.1.1"
+    postcss-value-parser "^4.2.0"
+
+balanced-match@^1.0.0:
+  version "1.0.2"
+
+baseline-browser-mapping@^2.8.25:
+  version "2.8.32"
+
+binary-extensions@^2.0.0:
+  version "2.3.0"
+
+bootstrap-icons@^1.13.1:
+  version "1.13.1"
+
+bootstrap@^5.3.8:
+  version "5.3.8"
+  resolved "https://registry.npmjs.org/bootstrap/-/bootstrap-5.3.8.tgz"
+  integrity sha512-HP1SZDqaLDPwsNiqRqi5NcP0SSXciX2s9E+RyqJIIqGo+vJeN5AJVM98CXmW/Wux0nQ5L7jeWUdplCEf0Ee+tg==
+
+brace-expansion@^1.1.7:
+  version "1.1.12"
+  dependencies:
+    balanced-match "^1.0.0"
+    concat-map "0.0.1"
+
+braces@^3.0.3, braces@~3.0.2:
+  version "3.0.3"
+  dependencies:
+    fill-range "^7.1.1"
+
+browserslist@^4.27.0, "browserslist@>= 4.21.0":
+  version "4.28.0"
+  dependencies:
+    baseline-browser-mapping "^2.8.25"
+    caniuse-lite "^1.0.30001754"
+    electron-to-chromium "^1.5.249"
+    node-releases "^2.0.27"
+    update-browserslist-db "^1.1.4"
+
+caniuse-lite@^1.0.30001754:
+  version "1.0.30001757"
+
+chart.js@^4.5.1:
+  version "4.5.1"
+  resolved "https://registry.npmjs.org/chart.js/-/chart.js-4.5.1.tgz"
+  integrity sha512-GIjfiT9dbmHRiYi6Nl2yFCq7kkwdkp1W/lp2J99rX0yo9tgJGn3lKQATztIjb5tVtevcBtIdICNWqlq5+E8/Pw==
+  dependencies:
+    "@kurkle/color" "^0.3.0"
+
+chokidar@^3.3.0, chokidar@^3.5.2:
+  version "3.6.0"
+  dependencies:
+    anymatch "~3.1.2"
+    braces "~3.0.2"
+    glob-parent "~5.1.2"
+    is-binary-path "~2.1.0"
+    is-glob "~4.0.1"
+    normalize-path "~3.0.0"
+    readdirp "~3.6.0"
+  optionalDependencies:
+    fsevents "~2.3.2"
+
+chokidar@^4.0.0:
+  version "4.0.3"
+  dependencies:
+    readdirp "^4.0.1"
+
+cliui@^8.0.1:
+  version "8.0.1"
+  dependencies:
+    string-width "^4.2.0"
+    strip-ansi "^6.0.1"
+    wrap-ansi "^7.0.0"
+
+color-convert@^2.0.1:
+  version "2.0.1"
+  dependencies:
+    color-name "~1.1.4"
+
+color-name@~1.1.4:
+  version "1.1.4"
+
+concat-map@0.0.1:
+  version "0.0.1"
+
+debug@^4, debug@^4.3.4:
+  version "4.4.3"
+  dependencies:
+    ms "^2.1.3"
+
+dependency-graph@^1.0.0:
+  version "1.0.0"
+
+detect-libc@^1.0.3:
+  version "1.0.3"
+
+electron-to-chromium@^1.5.249:
+  version "1.5.262"
+
+emoji-regex@^8.0.0:
+  version "8.0.0"
+
+esbuild@^0.25.0:
+  version "0.25.12"
+  resolved "https://registry.npmjs.org/esbuild/-/esbuild-0.25.12.tgz"
+  integrity sha512-bbPBYYrtZbkt6Os6FiTLCTFxvq4tt3JKall1vRwshA3fdVztsLAatFaZobhkBC8/BrPetoa0oksYoKXoG4ryJg==
+  optionalDependencies:
+    "@esbuild/aix-ppc64" "0.25.12"
+    "@esbuild/android-arm" "0.25.12"
+    "@esbuild/android-arm64" "0.25.12"
+    "@esbuild/android-x64" "0.25.12"
+    "@esbuild/darwin-arm64" "0.25.12"
+    "@esbuild/darwin-x64" "0.25.12"
+    "@esbuild/freebsd-arm64" "0.25.12"
+    "@esbuild/freebsd-x64" "0.25.12"
+    "@esbuild/linux-arm" "0.25.12"
+    "@esbuild/linux-arm64" "0.25.12"
+    "@esbuild/linux-ia32" "0.25.12"
+    "@esbuild/linux-loong64" "0.25.12"
+    "@esbuild/linux-mips64el" "0.25.12"
+    "@esbuild/linux-ppc64" "0.25.12"
+    "@esbuild/linux-riscv64" "0.25.12"
+    "@esbuild/linux-s390x" "0.25.12"
+    "@esbuild/linux-x64" "0.25.12"
+    "@esbuild/netbsd-arm64" "0.25.12"
+    "@esbuild/netbsd-x64" "0.25.12"
+    "@esbuild/openbsd-arm64" "0.25.12"
+    "@esbuild/openbsd-x64" "0.25.12"
+    "@esbuild/openharmony-arm64" "0.25.12"
+    "@esbuild/sunos-x64" "0.25.12"
+    "@esbuild/win32-arm64" "0.25.12"
+    "@esbuild/win32-ia32" "0.25.12"
+    "@esbuild/win32-x64" "0.25.12"
+
+escalade@^3.1.1, escalade@^3.2.0:
+  version "3.2.0"
+
+fast-glob@^3.3.2:
+  version "3.3.3"
+  resolved "https://registry.npmjs.org/fast-glob/-/fast-glob-3.3.3.tgz"
+  integrity sha512-7MptL8U0cqcFdzIzwOTHoilX9x5BrNqye7Z/LuC7kCMRio1EMSyqRK3BEAUD7sXRq4iT4AzTVuZdhgQ2TCvYLg==
+  dependencies:
+    "@nodelib/fs.stat" "^2.0.2"
+    "@nodelib/fs.walk" "^1.2.3"
+    glob-parent "^5.1.2"
+    merge2 "^1.3.0"
+    micromatch "^4.0.8"
+
+fastq@^1.6.0:
+  version "1.19.1"
+  resolved "https://registry.npmjs.org/fastq/-/fastq-1.19.1.tgz"
+  integrity sha512-GwLTyxkCXjXbxqIhTsMI2Nui8huMPtnxg7krajPJAjnEG/iiOS7i+zCtWGZR9G0NBKbXKh6X9m9UIsYX/N6vvQ==
+  dependencies:
+    reusify "^1.0.4"
+
+fdir@^6.5.0:
+  version "6.5.0"
+
+fill-range@^7.1.1:
+  version "7.1.1"
+  dependencies:
+    to-regex-range "^5.0.1"
+
+fraction.js@^5.3.4:
+  version "5.3.4"
+
+fs-extra@^11.0.0:
+  version "11.3.2"
+  dependencies:
+    graceful-fs "^4.2.0"
+    jsonfile "^6.0.1"
+    universalify "^2.0.0"
+
+fsevents@~2.3.2, fsevents@~2.3.3:
+  version "2.3.3"
+
+get-caller-file@^2.0.5:
+  version "2.0.5"
+
+glob-parent@^5.1.2, glob-parent@~5.1.2:
+  version "5.1.2"
+  dependencies:
+    is-glob "^4.0.1"
+
+graceful-fs@^4.1.6, graceful-fs@^4.2.0:
+  version "4.2.11"
+
+has-flag@^3.0.0:
+  version "3.0.0"
+
+ignore-by-default@^1.0.1:
+  version "1.0.1"
+
+immutable@^5.0.2:
+  version "5.1.4"
+
+is-binary-path@~2.1.0:
+  version "2.1.0"
+  dependencies:
+    binary-extensions "^2.0.0"
+
+is-extglob@^2.1.1:
+  version "2.1.1"
+
+is-fullwidth-code-point@^3.0.0:
+  version "3.0.0"
+
+is-glob@^4.0.1, is-glob@^4.0.3, is-glob@~4.0.1:
+  version "4.0.3"
+  dependencies:
+    is-extglob "^2.1.1"
+
+is-number@^7.0.0:
+  version "7.0.0"
+
+jsonfile@^6.0.1:
+  version "6.2.0"
+  dependencies:
+    universalify "^2.0.0"
+  optionalDependencies:
+    graceful-fs "^4.1.6"
+
+lilconfig@^3.1.1:
+  version "3.1.3"
+
+merge2@^1.3.0:
+  version "1.4.1"
+  resolved "https://registry.npmjs.org/merge2/-/merge2-1.4.1.tgz"
+  integrity sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==
+
+micromatch@^4.0.5, micromatch@^4.0.8:
+  version "4.0.8"
+  dependencies:
+    braces "^3.0.3"
+    picomatch "^2.3.1"
+
+minimatch@^3.1.2:
+  version "3.1.2"
+  dependencies:
+    brace-expansion "^1.1.7"
+
+ms@^2.1.3:
+  version "2.1.3"
+
+nanoid@^3.3.11:
+  version "3.3.11"
+
+node-addon-api@^7.0.0:
+  version "7.1.1"
+
+node-releases@^2.0.27:
+  version "2.0.27"
+
+nodemon@^3.1.11:
+  version "3.1.11"
+  dependencies:
+    chokidar "^3.5.2"
+    debug "^4"
+    ignore-by-default "^1.0.1"
+    minimatch "^3.1.2"
+    pstree.remy "^1.1.8"
+    semver "^7.5.3"
+    simple-update-notifier "^2.0.0"
+    supports-color "^5.5.0"
+    touch "^3.1.0"
+    undefsafe "^2.0.5"
+
+normalize-path@^3.0.0, normalize-path@~3.0.0:
+  version "3.0.0"
+
+normalize-range@^0.1.2:
+  version "0.1.2"
+
+picocolors@^1.0.0, picocolors@^1.1.1:
+  version "1.1.1"
+
+picomatch@^2.0.4:
+  version "2.3.1"
+
+picomatch@^2.2.1:
+  version "2.3.1"
+
+picomatch@^2.3.1:
+  version "2.3.1"
+
+"picomatch@^3 || ^4", picomatch@^4.0.3:
+  version "4.0.3"
+
+pify@^2.3.0:
+  version "2.3.0"
+
+postcss-cli@^11.0.1:
+  version "11.0.1"
+  dependencies:
+    chokidar "^3.3.0"
+    dependency-graph "^1.0.0"
+    fs-extra "^11.0.0"
+    picocolors "^1.0.0"
+    postcss-load-config "^5.0.0"
+    postcss-reporter "^7.0.0"
+    pretty-hrtime "^1.0.3"
+    read-cache "^1.0.0"
+    slash "^5.0.0"
+    tinyglobby "^0.2.12"
+    yargs "^17.0.0"
+
+postcss-load-config@^5.0.0:
+  version "5.1.0"
+  dependencies:
+    lilconfig "^3.1.1"
+    yaml "^2.4.2"
+
+postcss-reporter@^7.0.0:
+  version "7.1.0"
+  dependencies:
+    picocolors "^1.0.0"
+    thenby "^1.3.4"
+
+postcss-value-parser@^4.2.0:
+  version "4.2.0"
+
+postcss@^8.0.0, postcss@^8.1.0, postcss@^8.5.6, postcss@>=8.0.9:
+  version "8.5.6"
+  dependencies:
+    nanoid "^3.3.11"
+    picocolors "^1.1.1"
+    source-map-js "^1.2.1"
+
+pretty-hrtime@^1.0.3:
+  version "1.0.3"
+
+pstree.remy@^1.1.8:
+  version "1.1.8"
+
+queue-microtask@^1.2.2:
+  version "1.2.3"
+  resolved "https://registry.npmjs.org/queue-microtask/-/queue-microtask-1.2.3.tgz"
+  integrity sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==
+
+read-cache@^1.0.0:
+  version "1.0.0"
+  dependencies:
+    pify "^2.3.0"
+
+readdirp@^4.0.1:
+  version "4.1.2"
+
+readdirp@~3.6.0:
+  version "3.6.0"
+  dependencies:
+    picomatch "^2.2.1"
+
+require-directory@^2.1.1:
+  version "2.1.1"
+
+reusify@^1.0.4:
+  version "1.1.0"
+  resolved "https://registry.npmjs.org/reusify/-/reusify-1.1.0.tgz"
+  integrity sha512-g6QUff04oZpHs0eG5p83rFLhHeV00ug/Yf9nZM6fLeUrPguBTkTQOdpAWWspMh55TZfVQDPaN3NQJfbVRAxdIw==
+
+rollup@^4.43.0:
+  version "4.53.3"
+  resolved "https://registry.npmjs.org/rollup/-/rollup-4.53.3.tgz"
+  integrity sha512-w8GmOxZfBmKknvdXU1sdM9NHcoQejwF/4mNgj2JuEEdRaHwwF12K7e9eXn1nLZ07ad+du76mkVsyeb2rKGllsA==
+  dependencies:
+    "@types/estree" "1.0.8"
+  optionalDependencies:
+    "@rollup/rollup-android-arm-eabi" "4.53.3"
+    "@rollup/rollup-android-arm64" "4.53.3"
+    "@rollup/rollup-darwin-arm64" "4.53.3"
+    "@rollup/rollup-darwin-x64" "4.53.3"
+    "@rollup/rollup-freebsd-arm64" "4.53.3"
+    "@rollup/rollup-freebsd-x64" "4.53.3"
+    "@rollup/rollup-linux-arm-gnueabihf" "4.53.3"
+    "@rollup/rollup-linux-arm-musleabihf" "4.53.3"
+    "@rollup/rollup-linux-arm64-gnu" "4.53.3"
+    "@rollup/rollup-linux-arm64-musl" "4.53.3"
+    "@rollup/rollup-linux-loong64-gnu" "4.53.3"
+    "@rollup/rollup-linux-ppc64-gnu" "4.53.3"
+    "@rollup/rollup-linux-riscv64-gnu" "4.53.3"
+    "@rollup/rollup-linux-riscv64-musl" "4.53.3"
+    "@rollup/rollup-linux-s390x-gnu" "4.53.3"
+    "@rollup/rollup-linux-x64-gnu" "4.53.3"
+    "@rollup/rollup-linux-x64-musl" "4.53.3"
+    "@rollup/rollup-openharmony-arm64" "4.53.3"
+    "@rollup/rollup-win32-arm64-msvc" "4.53.3"
+    "@rollup/rollup-win32-ia32-msvc" "4.53.3"
+    "@rollup/rollup-win32-x64-gnu" "4.53.3"
+    "@rollup/rollup-win32-x64-msvc" "4.53.3"
+    fsevents "~2.3.2"
+
+run-parallel@^1.1.9:
+  version "1.2.0"
+  resolved "https://registry.npmjs.org/run-parallel/-/run-parallel-1.2.0.tgz"
+  integrity sha512-5l4VyZR86LZ/lDxZTR6jqL8AFE2S0IFLMP26AbjsLVADxHdhB/c0GUsH+y39UfCi3dzz8OlQuPmnaJOMoDHQBA==
+  dependencies:
+    queue-microtask "^1.2.2"
+
+sass@^1.70.0, sass@^1.94.2:
+  version "1.94.2"
+  dependencies:
+    chokidar "^4.0.0"
+    immutable "^5.0.2"
+    source-map-js ">=0.6.2 <2.0.0"
+  optionalDependencies:
+    "@parcel/watcher" "^2.4.1"
+
+semver@^7.5.3:
+  version "7.7.3"
+
+simple-update-notifier@^2.0.0:
+  version "2.0.0"
+  dependencies:
+    semver "^7.5.3"
+
+slash@^5.0.0:
+  version "5.1.0"
+
+source-map-js@^1.2.1, "source-map-js@>=0.6.2 <2.0.0":
+  version "1.2.1"
+
+string-width@^4.1.0, string-width@^4.2.0, string-width@^4.2.3:
+  version "4.2.3"
+  dependencies:
+    emoji-regex "^8.0.0"
+    is-fullwidth-code-point "^3.0.0"
+    strip-ansi "^6.0.1"
+
+strip-ansi@^6.0.0, strip-ansi@^6.0.1:
+  version "6.0.1"
+  dependencies:
+    ansi-regex "^5.0.1"
+
+supports-color@^5.5.0:
+  version "5.5.0"
+  dependencies:
+    has-flag "^3.0.0"
+
+thenby@^1.3.4:
+  version "1.3.4"
+
+tinyglobby@^0.2.12, tinyglobby@^0.2.15:
+  version "0.2.15"
+  dependencies:
+    fdir "^6.5.0"
+    picomatch "^4.0.3"
+
+to-regex-range@^5.0.1:
+  version "5.0.1"
+  dependencies:
+    is-number "^7.0.0"
+
+touch@^3.1.0:
+  version "3.1.1"
+
+undefsafe@^2.0.5:
+  version "2.0.5"
+
+universalify@^2.0.0:
+  version "2.0.1"
+
+update-browserslist-db@^1.1.4:
+  version "1.1.4"
+  dependencies:
+    escalade "^3.2.0"
+    picocolors "^1.1.1"
+
+vite-plugin-ruby@^5.1.1:
+  version "5.1.1"
+  resolved "https://registry.npmjs.org/vite-plugin-ruby/-/vite-plugin-ruby-5.1.1.tgz"
+  integrity sha512-I1dXJq2ywdvTD2Cz5LYNcYLujqQ3eUxPoCjruRdfm2QBtHBY15NEeb6x5HuPM3T5S+y8S3p9fwRsieQQCjk0gg==
+  dependencies:
+    debug "^4.3.4"
+    fast-glob "^3.3.2"
+
+vite@^7.2.6, vite@>=5.0.0:
+  version "7.2.6"
+  resolved "https://registry.npmjs.org/vite/-/vite-7.2.6.tgz"
+  integrity sha512-tI2l/nFHC5rLh7+5+o7QjKjSR04ivXDF4jcgV0f/bTQ+OJiITy5S6gaynVsEM+7RqzufMnVbIon6Sr5x1SDYaQ==
+  dependencies:
+    esbuild "^0.25.0"
+    fdir "^6.5.0"
+    picomatch "^4.0.3"
+    postcss "^8.5.6"
+    rollup "^4.43.0"
+    tinyglobby "^0.2.15"
+  optionalDependencies:
+    fsevents "~2.3.3"
+
+wrap-ansi@^7.0.0:
+  version "7.0.0"
+  dependencies:
+    ansi-styles "^4.0.0"
+    string-width "^4.1.0"
+    strip-ansi "^6.0.0"
+
+y18n@^5.0.5:
+  version "5.0.8"
+
+yaml@^2.4.2:
+  version "2.8.2"
+
+yargs-parser@^21.1.1:
+  version "21.1.1"
+
+yargs@^17.0.0:
+  version "17.7.2"
+  dependencies:
+    cliui "^8.0.1"
+    escalade "^3.1.1"
+    get-caller-file "^2.0.5"
+    require-directory "^2.1.1"
+    string-width "^4.2.3"
+    y18n "^5.0.5"
+    yargs-parser "^21.1.1"

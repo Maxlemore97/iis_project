@@ -1,0 +1,25 @@
+.container.py-4
+  .row.mb-4
+    .col-md-8
+      %h1.mb-3 Documents
+
+      = form_with url: "/search", method: :get, local: true, class: "d-flex gap-2" do |f|
+        = f.text_field :q, placeholder: "Search documents...", class: "form-control"
+        = f.submit "Search", class: "btn btn-primary"
+
+  - if @documents.any?
+    .list-group
+      - @documents.each do |doc|
+        .list-group-item
+          %h5.mb-1
+            = doc.title.presence || "Untitled Document"
+
+          %small.text-muted
+            Record ID:
+            = doc.trec_id
+
+          %p.mt-2.mb-1
+            = truncate(doc.body, length: 200)
+  - else
+    .alert.alert-info
+      No documents found in the database.

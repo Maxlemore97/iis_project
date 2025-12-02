@@ -1,5 +1,5 @@
 namespace :trec do
-  desc "Import TREC .trec file (recordId + text + style_vec)"
+  desc "Import TREC .trec file (recordId + text + auto style_vec)"
   task import: :environment do
     file = ENV["FILE"]
 
@@ -16,23 +16,24 @@ namespace :trec do
 
     xml.xpath("//DOC").each do |doc|
       trec_id = doc.at_xpath("recordId")&.text&.strip
-      text    = doc.at_xpath("text")&.text&.strip
+      text = doc.at_xpath("text")&.text&.strip
 
       next if trec_id.nil? || text.nil?
 
-      # ✅ NEW — extract <style_vec>
+      # --- Try to find precomputed <style_vec> ---
       vec_node = doc.at_xpath("style_vec")
-      style_vec =
-        if vec_node
-          vec_node.text.strip.split(",").map(&:to_f)
-        else
-          nil
-        end
+
+      style_vec = if vec_node
+                    vec_node.text.strip.split(",").map(&:to_f)
+                  else
+                    # --- Compute dynamically using the service ---
+                    StyleFeatureService.extract(text)
+                  end
 
       Document.create!(
-        trec_id:   trec_id,
-        title:     text.lines.first.strip,
-        body:      text,
+        trec_id: trec_id,
+        title: text.lines.first.strip,
+        body: text,
         style_vec: style_vec
       )
     end

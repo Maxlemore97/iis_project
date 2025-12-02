@@ -1,51 +1,7 @@
-class DocumentsController < ApplicationController
+class DocumentsHybridController < ApplicationController
   def index
     # Show the newest 20 documents
     @documents = Document.order(created_at: :desc).limit(20)
-  end
-
-  # ----------------------------------------
-  # TEXT SEARCH (kept as-is)
-  # ----------------------------------------
-  def search
-    query = params[:q]
-
-    results = Document.search(
-      query: {
-        multi_match: {
-          query: query,
-          fields: ["title^2", "body"]
-        }
-      }
-    )
-
-    render json: es_hits(results)
-  end
-
-  # ----------------------------------------
-  # 🔥 NEW: VECTOR SIMILARITY SEARCH
-  # ----------------------------------------
-  def search_style
-    # Expecting params like:
-    # ?vec=0.72,18.4,0.05,46.2
-    vec_param = params[:vec]
-
-    return render json: { error: "Missing vec param" }, status: 400 if vec_param.blank?
-
-    style_vec = vec_param.split(",").map(&:to_f)
-
-    results = Document.__elasticsearch__.search(
-      query: {
-        knn: {
-          field: "style_vec",
-          query_vector: style_vec,
-          k: 20,
-          num_candidates: 10000
-        }
-      }
-    )
-
-    render json: es_hits(results)
   end
 
   def search_hybrid
