@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   get "/vectors", to: "vectors#index"
+  get "/keywords", to: "keywords#index"
 
   get "documents" => "documents#index"
   resources :documents_hybrid, only: [:index]

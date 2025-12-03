@@ -1,0 +1,155 @@
+.container.py-4
+  %h1.mb-4 Writing Style Keyword Analysis
+
+  %p.text-muted
+    Below you see documents with detailed explanations of the keywords
+    describing their linguistic, stylistic, and emotional properties.
+
+  .accordion#keywordAccordion
+    - @documents.each_with_index do |d, i|
+      - doc = d[:record]
+
+      .accordion-item
+        %h2.accordion-header{id: "heading-#{i}"}
+          %button.accordion-button.collapsed{ type: "button", data: { bs_toggle: "collapse", bs_target: "#collapse-#{i}" }, aria: { expanded: "false", controls: "collapse-#{i}" }}
+            = "Document ##{doc.trec_id} — #{doc.title}"
+
+        .accordion-collapse.collapse{ id: "collapse-#{i}",aria: { labelledby: "heading-#{i}" },data: { bs_parent: "#keywordAccordion" }}
+          .accordion-body
+
+            / =====================================================
+            / BASIC INFORMATION
+            / =====================================================
+            %p
+              %strong ID:
+              = doc.id
+
+            %p
+              %strong Title:
+              = doc.title
+
+            %p
+              %strong Body (preview):
+              = d[:preview]
+              - if doc.body.length > 500
+                %em.text-muted ... truncated ...
+
+            %hr
+
+            / =====================================================
+            / MAIN STYLE KEYWORDS
+            / =====================================================
+            %h5.mb-3 Core Style Keywords (Overview)
+
+            - if d[:style_keywords].present?
+              %p.text-muted
+                These keywords summarise the document's writing style.
+
+              %div.mb-3
+                - d[:style_keywords].each do |kw|
+                  %span.badge.bg-primary.text-light.mx-1.mb-1= kw
+            - else
+              %p.text-muted No style keywords computed.
+
+            %hr
+
+            / =====================================================
+            / CATEGORY-BY-CATEGORY EXPLANATIONS
+            / =====================================================
+
+            %h5.mt-4 Vocabulary Richness
+            %p.text-muted
+              Measures how diverse the vocabulary is.
+            %ul
+              %li
+                %strong Total words:
+                = d[:words_count]
+              %li
+                %strong Unique words:
+                = d[:unique_count]
+              %li
+                %strong Lexical density:
+                = d[:lexical_density]
+            %p
+              Higher values → richer vocabulary.
+
+            %hr
+
+            %h5 Sentence Length & Complexity
+            %p.text-muted
+              Long sentences often suggest more complex structure.
+            %p
+              Total sentences:
+              %strong= d[:sentence_count]
+
+            %hr
+
+            %h5 Pronoun Usage (Subjective vs. Objective)
+            %p.text-muted
+              High pronoun usage → more subjective or narrative.
+              Low → objective, analytical.
+
+            %hr
+
+            %h5 Readability (Flesch Score)
+            %p.text-muted
+              High score = easier to read. Low = academic, dense text.
+            %p
+              - readability = doc.style_vec && doc.style_vec[3]
+              Raw score:
+              %strong= readability&.round(3)
+
+            %hr
+
+            %h5 Lexical Density
+            %p.text-muted
+              Percentage of unique words in the text.
+
+            %p
+              %strong Lexical density:
+              = d[:lexical_density]
+
+            - if d[:lexical_density] > 0.5
+              %p.text-success High lexical density → complex, rich vocabulary.
+            - elsif d[:lexical_density] < 0.3
+              %p.text-warning Low lexical density → repetitive or simple.
+
+            %hr
+
+            %h5 Adjective Usage (Descriptive vs. Dry)
+            %p.text-muted
+              More adjectives → more descriptive writing.
+            %p
+              %strong Adjectives found:
+              = d[:adjective_count]
+
+            %hr
+
+            %h5 Emotional Tone
+            %p.text-muted
+              Emotional vs neutral tone based on emotive words.
+            %p
+              %strong Emotive words:
+              = d[:emotive_count]
+
+            %hr
+
+            %h5 Passive vs. Active Voice
+            %p.text-muted
+              Based on detecting passive-voice sentence patterns.
+
+            %p
+              %strong Passive sentences detected:
+              = d[:passive_sentences].size
+
+            - if d[:passive_sentences].any?
+              %ul
+                - d[:passive_sentences].take(5).each do |ps|
+                  %li= ps
+
+            %hr
+
+            %h5 Top 30 Frequent Words
+            %ul
+              - d[:top_unique].each do |uw|
+                %li= "#{uw[:word]} → #{uw[:count]}×"

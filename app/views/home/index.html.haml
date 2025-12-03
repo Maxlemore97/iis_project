@@ -1,6 +1,47 @@
 .container.py-5
   %h1.mb-4.text-center Document Management
 
+  / ============================================================
+  / INTRODUCTION — WHAT THIS SYSTEM DOES
+  / ============================================================
+  .card.mb-5.shadow-sm
+    .card-header.bg-info.text-white
+      %h5.mb-0
+        %i.bi.bi-info-circle.me-2
+        About This Search System
+    .card-body
+      %p
+        This platform was developed to support experiments for the
+        <strong>IIS1 Semester Short Report</strong>. It allows you to upload large
+        TREC-style document collections and queries, analyse their
+        writing style, and run different retrieval strategies.
+
+      %p
+        The goal is to investigate how well different methods can satisfy
+        “information needs” — as required in the assignment description. :contentReference[oaicite:1]{index=1}
+
+      %h6.mt-3 What was tried?
+      %ul
+        %li Classic text search (BM25) with Elasticsearch.
+        %li Writing-style analysis using a custom <code>StyleFeatureService</code>.
+        %li Automatic extraction of style vectors (vocabulary richness, sentence length, pronoun use, readability).
+        %li Generation of human-readable style keywords (e.g. “subjective”, “easy-to-read”, “dense”).
+        %li Hybrid search that mixes text relevance with style similarity.
+        %li Full keyword-based hybrid search using Elasticsearch <code>bool</code> queries.
+
+      %h6.mt-3 Technologies Used
+      %ul
+        %li <strong>Ruby on Rails 7</strong> for the application logic.
+        %li <strong>PostgreSQL</strong> for storing documents and queries.
+        %li <strong>Elasticsearch 8</strong> for BM25 search & keyword matching.
+        %li <strong>Nokogiri</strong> for parsing TREC XML files.
+        %li <strong>Custom NLP heuristics</strong> (no external AI models required).
+        %li <strong>Bootstrap + Vite</strong> for clean UI and responsive layout.
+
+      %p.mt-3
+        Below you can upload datasets, inspect imported material,
+        or reset all stored documents for a fresh experiment.
+
   - if flash[:notice]
     .alert.alert-success= flash[:notice]
   - if flash[:alert]
@@ -20,7 +61,9 @@
 
         .card-body
           %p.text-muted
-            Upload a <code>.trec</code> file to import <strong>Documents</strong> with style vectors.
+            Upload a <code>.trec</code> file containing the full document collection.
+            Each document will be parsed, analysed, assigned style vectors and
+            style keywords, and indexed into Elasticsearch.
 
           = form_with url: upload_trec_path, local: true, method: :post, multipart: true do |f|
             .mb-3
@@ -42,8 +85,9 @@
 
         .card-body
           %p.text-muted
-            Upload a <code>.trec</code> file to import <strong>QueryDocuments</strong>
-            for evaluation and scoring.
+            Upload the <code>.trec</code> file containing the 50 query descriptions.
+            Each query is also analysed and enriched with style keywords
+            to support hybrid text + keyword matching.
 
           = form_with url: upload_query_trec_path, method: :post, local: true, multipart: true do |f|
             .mb-3
