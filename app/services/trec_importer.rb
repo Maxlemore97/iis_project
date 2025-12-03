@@ -11,7 +11,9 @@ class TrecImporter
 
       next if trec_id.blank? || text.blank?
 
-      # Try to read precomputed style_vec
+      # --------------------------------------------------
+      # 1. Load style_vec (either precomputed or generated)
+      # --------------------------------------------------
       vec_node = node.at_xpath("style_vec")
 
       style_vec =
@@ -21,17 +23,35 @@ class TrecImporter
           StyleFeatureService.extract(text)
         end
 
+      # --------------------------------------------------
+      # 2. Compute style keywords
+      # --------------------------------------------------
+      words = StyleFeatureService.tokenize(text)
+      sentences = text.split(/(?<=[.!?])\s+/)
+
+      style_keywords = StyleKeywordService.generate(
+        words: words,
+        sentences: sentences,
+        style_vec: style_vec
+      )
+
+      # --------------------------------------------------
+      # 3. Create record
+      # --------------------------------------------------
       Document.create!(
         trec_id: trec_id,
         title: text.lines.first&.strip.to_s,
         body: text,
-        style_vec: style_vec
+        style_vec: style_vec,
+        style_keywords: style_keywords
       )
 
       count += 1
     end
 
-    # Reindex in Elasticsearch
+    # --------------------------------------------------
+    # 4. Reindex Elasticsearch
+    # --------------------------------------------------
     Document.import(force: true)
 
     count

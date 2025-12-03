@@ -20,7 +20,7 @@ Rails.application.routes.draw do
 
   get "documents" => "documents#index"
   resources :documents_hybrid, only: [:index]
-  get "search_style" => "documents#search_style"
+  resources :documents_elastic, only: [:index]
 
   # Defines the root path route ("/")
   # root "posts#index"

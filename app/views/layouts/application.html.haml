@@ -16,11 +16,7 @@
       .container
         %a.navbar-brand{ href: root_path } IIS Project
 
-        %button.navbar-toggler{
-          type: "button",
-          data: { bs_toggle: "collapse", bs_target: "#navbarNav" },
-          aria: { controls: "navbarNav", expanded: "false", label: "Toggle navigation" }
-        }
+        %button.navbar-toggler{type: "button", data: { bs_toggle: "collapse", bs_target: "#navbarNav" }, aria: { controls: "navbarNav", expanded: "false", label: "Toggle navigation" }}
           %span.navbar-toggler-icon
 
         .collapse.navbar-collapse#navbarNav
@@ -36,7 +32,7 @@
               %a.nav-link{ href: documents_hybrid_index_path } Search (Hybrid)
 
             %li.nav-item
-              %a.nav-link{ href: search_style_path } Search (Style)
+              %a.nav-link{ href: documents_elastic_index_path } Search (Style)
 
             %li.nav-item
               %a.nav-link{ href: vectors_path } Vectors

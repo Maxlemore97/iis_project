@@ -3,14 +3,15 @@ require "ostruct"
 class DocumentsElasticController < ApplicationController
   def index
     @queries = QueryDocument.order(:trec_id)
-    query_id = params[:query_id]
 
-    # Weight: how important the vector similarity is
+    # % importance of keyword similarity
     @weight = (params[:weight] || 20).to_i.clamp(0, 100)
     weight = @weight / 100.0
 
+    query_id = params[:query_id]
+
     #
-    # No search → show random documents
+    # No query selected → return random documents
     #
     if query_id.blank?
       @searched = false
@@ -18,114 +19,132 @@ class DocumentsElasticController < ApplicationController
       return
     end
 
-    #
     # ------------------------------------------------------
-    # Load query document (this has title, body & style_vec)
+    # Load query document → we need text + style_keywords
     # ------------------------------------------------------
-    #
     query_record = QueryDocument.find(query_id)
     @query_doc = query_record
-    @query = query_record.body
 
     query_text = "#{query_record.title} #{query_record.body}"
-    query_vec = query_record.style_vec.map(&:to_f)
+    query_keywords = (query_record.style_keywords || []).map(&:downcase)
+
+    # If query has no keywords yet → generate and save them
+    if query_keywords.empty?
+      words     = StyleFeatureService.tokenize(query_record.body)
+      sentences = query_record.body.split(/(?<=[.!?])\s+/)
+
+      new_keywords = StyleKeywordService.generate(
+        words: words,
+        sentences: sentences,
+        style_vec: query_record.style_vec
+      )
+
+      query_record.update!(style_keywords: new_keywords)
+      query_keywords = new_keywords.map(&:downcase)
+    end
+
+
+    bm25_boost = 1.0 - weight
+    kw_boost = weight
 
     #
     # ======================================================
-    # 1) TEXT SEARCH (BM25)
+    # ONE Elasticsearch query combining BM25 + style keywords
     # ======================================================
     #
-    text_results = Document.search(
+    es_query = {
       query: {
-        multi_match: {
-          query: query_text,
-          fields: ["title^2", "body"]
+        bool: {
+          should: [
+            # text-relevance
+            {
+              multi_match: {
+                query: query_text,
+                fields: ["title^2", "body"],
+                boost: bm25_boost
+              }
+            },
+            # keyword overlap relevance
+            {
+              terms: {
+                style_keywords: query_keywords,
+                boost: kw_boost * 5.0 # keyword multiplier
+              }
+            }
+          ]
         }
       },
       size: 200
-    )
+    }
 
-    text_hits = es_hits(text_results) # array of Result structs
+    results = Document.search(es_query)
 
-    max_bm25 = text_hits.map(&:score).max || 1.0
-    text_hits.each { |h| h.norm_score = h.score.to_f / max_bm25 }
+    # Convert hits to structs with extracted fields
+    raw_docs = es_hits(results)
 
     #
     # ======================================================
-    # 2) VECTOR SIMILARITY
-    #    (computed on the same 200 docs)
+    # Compute keyword similarity score (manual overlap)
     # ======================================================
     #
-    text_hits.each do |hit|
-      doc = Document.find_by(id: hit.id)
-      next if doc.nil? || doc.style_vec.nil?
+    raw_docs.each do |doc|
+      doc_keywords = (doc.style_keywords || []).map(&:downcase)
 
-      vec = doc.style_vec.map(&:to_f)
-      hit.vector_score = cosine_similarity(query_vec, vec)
+      overlap = (doc_keywords & query_keywords).size
+      union = (doc_keywords | query_keywords).size
+
+      kw_score =
+        if union.zero?
+          0.0
+        else
+          overlap.to_f / union
+        end
+
+      doc.keyword_score = kw_score
     end
 
-    max_vec = text_hits.map { |h| h.vector_score || 0 }.max || 1.0
-    text_hits.each { |h| h.vector_score = (h.vector_score || 0) / max_vec }
-
     #
-    # ======================================================
-    # 3) HYBRID SCORING
-    # ======================================================
+    # Normalize keyword scores
     #
-    hybrid = text_hits.map do |hit|
-      hybrid_score = (1 - weight) * hit.norm_score +
-                     weight * hit.vector_score
-
-      OpenStruct.new(
-        id: hit.id,
-        trec_id: hit.trec_id,
-        title: hit.title,
-        body: hit.body,
-        bm25_score: hit.norm_score,
-        vector_score: hit.vector_score,
-        hybrid_score: hybrid_score
-      )
+    max_kw = raw_docs.map { |d| d.keyword_score }.max || 1.0
+    raw_docs.each do |d|
+      d.keyword_score = d.keyword_score / max_kw
     end
 
+    #
+    # ======================================================
+    # Hybrid score
+    # ======================================================
+    #
+    raw_docs.each do |d|
+      d.hybrid_score = (1.0 - weight) * d.score.to_f +
+                       weight * d.keyword_score
+    end
+
+    #
+    # Final sorting & selection
+    #
+    @documents = raw_docs.sort_by { |d| -d.hybrid_score }.first(20)
     @searched = true
-    @documents = hybrid.sort_by { |d| -d.hybrid_score }.first(20)
   end
 
   private
 
   #
-  # Convert ES result → struct
+  # Convert Elasticsearch hits → OpenStruct
   #
-  Result = Struct.new(
-    :id, :trec_id, :title, :body,
-    :score, :norm_score, :vector_score,
-    keyword_init: true
-  )
-
   def es_hits(results)
     results.response["hits"]["hits"].map do |hit|
-      Result.new(
-        id: hit["_id"].to_s,
+      OpenStruct.new(
+        id: hit["_id"],
         trec_id: hit["_source"]["trec_id"],
         title: hit["_source"]["title"],
         body: hit["_source"]["body"],
-        score: hit["_score"].to_f
+        style_keywords: hit["_source"]["style_keywords"] || [],
+        score: hit["_score"].to_f, # BM25 score
+        keyword_score: 0.0, # filled later
+        hybrid_score: 0.0 # filled later
       )
     end
-  end
-
-  #
-  # Cosine similarity (0..1)
-  #
-  def cosine_similarity(a, b)
-    return 0 if a.nil? || b.nil?
-
-    dot = a.zip(b).map { |x, y| x * y }.sum
-    mag_a = Math.sqrt(a.map { |x| x * x }.sum)
-    mag_b = Math.sqrt(b.map { |y| y * y }.sum)
-
-    return 0 if mag_a == 0 || mag_b == 0
-
-    dot / (mag_a * mag_b)
   end
 end
