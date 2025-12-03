@@ -4,7 +4,6 @@ class DocumentsHybridController < ApplicationController
   def index
     @queries = QueryDocument.order(:trec_id)
 
-    # weight = importance of vector score
     @weight = (params[:weight] || 20).to_i.clamp(0, 100)
     weight = @weight / 100.0
 
@@ -41,13 +40,13 @@ class DocumentsHybridController < ApplicationController
 
     text_hits = es_hits(text_results) # array of Result structs
 
-    # Normalize BM25 scores
+    # Normalize BM25 scores → 0..1
     max_bm25 = text_hits.map(&:score).max || 1.0
     text_hits.each { |h| h.norm_score = h.score / max_bm25 }
 
     #
     # ===========================================
-    # 2) VECTOR RE-RANKING (only top 200 from BM25)
+    # 2) VECTOR RE-RANKING (using only BM25 hits)
     # ===========================================
     #
     text_hits.each do |hit|
@@ -58,7 +57,7 @@ class DocumentsHybridController < ApplicationController
       hit.vector_score = cosine_similarity(query_vec, vec)
     end
 
-    # Normalize vector scores (0..1)
+    # Normalize vector scores → 0..1
     max_vec = text_hits.map { |h| h.vector_score || 0 }.max || 1.0
     text_hits.each do |h|
       h.vector_score = (h.vector_score || 0) / max_vec
@@ -66,7 +65,7 @@ class DocumentsHybridController < ApplicationController
 
     #
     # ===========================================
-    # 3) FINAL HYBRID SCORE
+    # 3) Compute hybrid score
     # ===========================================
     #
     results = text_hits.map do |hit|
@@ -83,9 +82,32 @@ class DocumentsHybridController < ApplicationController
       )
     end
 
-    # Sort by hybrid score
+    #
+    # ===========================================
+    # 4) RANKING POSITIONS (NEW)
+    # ===========================================
+    #
+
+    # 🔵 BM25-only rank
+    bm25_sorted = results.sort_by { |r| -r.bm25_score }
+    bm25_sorted.each_with_index do |r, i|
+      r.bm25_rank = i + 1
+    end
+
+    # 🔵 Vector-only rank
+    vec_sorted = results.sort_by { |r| -r.vector_score }
+    vec_sorted.each_with_index do |r, i|
+      r.vector_rank = i + 1
+    end
+
+    # 🔵 Hybrid rank (what we will return)
+    hybrid_sorted = results.sort_by { |r| -r.hybrid_score }
+    hybrid_sorted.each_with_index do |r, i|
+      r.hybrid_rank = i + 1
+    end
+
     @searched = true
-    @documents = results.sort_by { |r| -r.hybrid_score }.first(20)
+    @documents = hybrid_sorted.first(20)
   end
 
   private
@@ -111,8 +133,8 @@ class DocumentsHybridController < ApplicationController
     return 0 if a.nil? || b.nil?
 
     dot = a.zip(b).map { |x, y| x * y }.sum
-    mag_a = Math.sqrt(a.map { |x| x * x }.sum)
-    mag_b = Math.sqrt(b.map { |y| y * y }.sum)
+    mag_a = Math.sqrt(a.sum { |x| x * x })
+    mag_b = Math.sqrt(b.sum { |y| y * y })
 
     return 0 if mag_a == 0 || mag_b == 0
 

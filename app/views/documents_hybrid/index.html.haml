@@ -3,6 +3,41 @@
     .col-md-8
       %h1.mb-3 Hybrid Search
 
+    / ----------------------------------------------------
+    / Info Accordion (EXPLANATION FOR NON-TECHNICAL USERS)
+    / ----------------------------------------------------
+    .accordion.mb-4#infoAccordion
+      .accordion-item
+        %h2.accordion-header#infoHeading
+          %button.accordion-button.collapsed{ type: "button", data: { bs_toggle: "collapse", bs_target: "#infoCollapse" }, aria: { expanded: "false", controls: "infoCollapse" } }
+            How does Hybrid Search work?
+
+        .accordion-collapse.collapse#infoCollapse{aria: { labelledby: "infoHeading" }, data: { bs_parent: "#infoAccordion" }}
+          .accordion-body
+            %p
+              Hybrid search combines two different ways of finding good matches:
+            %ul
+              %li
+                %strong 1. Text relevance (BM25):
+                This scores how well a document’s words match the query text.
+              %li
+                %strong 2. Writing-style similarity (Vector score):
+                Each document’s writing style is represented as a 4-dimensional vector
+                (vocabulary variety, sentence length, pronoun usage, readability).
+                Documents with similar style get a higher vector score.
+              %li
+                %strong 3. Hybrid score:
+                We mix both scores using the percentage you choose.
+                A higher percentage means writing style becomes more important.
+            %p.mt-2
+              The final ranking shows:
+            %ul
+              %li The position based only on text relevance
+              %li The position based only on writing-style similarity
+              %li The final hybrid ranking
+
+  .row.mb-4
+    .col-md-8
       = form_with url: documents_hybrid_index_path, method: :get, local: true, class: "row g-3" do |f|
         .col-md-6
           = f.label :query_id, "Select Query"
@@ -21,7 +56,7 @@
               class: "form-control"
 
         .col-md-2.d-flex.align-items-end
-          = f.submit "Search", class: "btn btn-primary w-100"
+          = f.submit "Search", class: "btn.btn-primary w-100"
 
   - if @searched
     %h5.mt-3.mb-3
@@ -49,7 +84,13 @@
               %span.badge.bg-warning.text-dark Vector: #{doc.vector_score.round(3)}
               %span.badge.bg-success Hybrid: #{doc.hybrid_score.round(3)}
 
+            %div.mt-2
+              %span.badge.bg-primary BM25 Rank: #{doc.bm25_rank}
+              %span.badge.bg-secondary Vector Rank: #{doc.vector_rank}
+              %span.badge.bg-dark Hybrid Rank: #{doc.hybrid_rank}
+
           %p.mt-2.mb-1
             = truncate(doc.body, length: 200)
+
   - else
     .alert.alert-info No documents found.
