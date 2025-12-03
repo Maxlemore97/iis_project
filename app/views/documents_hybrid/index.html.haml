@@ -1,0 +1,55 @@
+.container.py-4
+  .row.mb-4
+    .col-md-8
+      %h1.mb-3 Hybrid Search
+
+      = form_with url: documents_hybrid_index_path, method: :get, local: true, class: "row g-3" do |f|
+        .col-md-6
+          = f.label :query_id, "Select Query"
+          = f.select :query_id,
+              @queries.map { |q| ["#{q.trec_id} – #{q.title.truncate(50)}", q.id] },
+              { include_blank: "Choose query…" },
+              class: "form-select"
+
+        .col-md-4
+          = f.label :weight, "Vector weight (%)"
+          = f.number_field :weight,
+              value: @weight,
+              min: 0,
+              max: 100,
+              step: 5,
+              class: "form-control"
+
+        .col-md-2.d-flex.align-items-end
+          = f.submit "Search", class: "btn btn-primary w-100"
+
+  - if @searched
+    %h5.mt-3.mb-3
+      Hybrid results for query:
+      %strong= @query_doc.trec_id
+    %p.text-muted= @query_doc.body.truncate(300)
+
+    %p.badge.bg-secondary.mt-2= "#{@documents.size} results"
+
+  - else
+    %h5.mt-3.mb-3.text-muted Showing 20 random documents
+
+  - if @documents.any?
+    .list-group.mt-3
+      - @documents.each do |doc|
+        .list-group-item
+          %h5.mb-1= doc.title.presence || "Untitled Document"
+
+          %small.text-muted
+            Record ID: #{doc.trec_id}
+
+          - if @searched
+            %div.mt-2
+              %span.badge.bg-info.text-dark BM25: #{doc.bm25_score.round(3)}
+              %span.badge.bg-warning.text-dark Vector: #{doc.vector_score.round(3)}
+              %span.badge.bg-success Hybrid: #{doc.hybrid_score.round(3)}
+
+          %p.mt-2.mb-1
+            = truncate(doc.body, length: 200)
+  - else
+    .alert.alert-info No documents found.

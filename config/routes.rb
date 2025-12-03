@@ -19,8 +19,8 @@ Rails.application.routes.draw do
   get "/vectors", to: "vectors#index"
 
   get "documents" => "documents#index"
+  resources :documents_hybrid, only: [:index]
   get "search_style" => "documents#search_style"
-  get "search_hybrid", to: "documents#search_hybrid"
 
   # Defines the root path route ("/")
   # root "posts#index"
