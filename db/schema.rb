@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_12_02_231126) do
+ActiveRecord::Schema[7.2].define(version: 2025_12_03_082528) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -21,6 +21,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_02_231126) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.float "style_vec", default: [], array: true
+    t.text "style_keywords", default: [], array: true
   end
 
   create_table "query_documents", force: :cascade do |t|
@@ -30,6 +31,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_02_231126) do
     t.float "style_vec", array: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "style_keywords", default: [], array: true
     t.index ["trec_id"], name: "index_query_documents_on_trec_id"
   end
 end

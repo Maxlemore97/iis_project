@@ -30,15 +30,26 @@ namespace :trec do
                     StyleFeatureService.extract(text)
                   end
 
+      words = StyleFeatureService.tokenize(text)
+      sentences = text.split(/(?<=[.!?])\s+/)
+
+      style_keywords = StyleKeywordService.generate(
+        words: words,
+        sentences: sentences,
+        style_vec: style_vec
+      )
+
       Document.create!(
         trec_id: trec_id,
         title: text.lines.first.strip,
         body: text,
-        style_vec: style_vec
+        style_vec: style_vec,
+        style_keywords: style_keywords
       )
     end
 
     puts "Reindexing..."
+
     Document.import(force: true)
 
     puts "Done."

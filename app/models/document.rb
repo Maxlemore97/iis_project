@@ -19,6 +19,7 @@ class Document < ApplicationRecord
       indexes :trec_id, type: :keyword
       indexes :title, type: :text, analyzer: "custom_english"
       indexes :body, type: :text, analyzer: "custom_english"
+      indexes :style_keywords, type: :keyword
 
       indexes :style_vec,
               type: :dense_vector,
