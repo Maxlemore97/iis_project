@@ -102,7 +102,7 @@
           - if @searched
             %div.mt-2
               %span.badge.bg-info.text-dark
-                BM25 Score: #{doc.score.round(3)}
+                BM25 Score: #{doc.norm_bm25.round(3)}
 
               %span.badge.bg-warning.text-dark
                 Keyword Score: #{(doc.keyword_score || 0).round(3)}

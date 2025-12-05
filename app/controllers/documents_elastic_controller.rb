@@ -84,6 +84,21 @@ class DocumentsElasticController < ApplicationController
 
     #
     # ======================================================
+    # Normalize BM25 score (0..1)
+    # ======================================================
+    #
+    max_bm25 = raw_docs.map(&:score).max || 1.0
+    min_bm25 = raw_docs.map(&:score).min || 0.0
+
+    range_bm25 = max_bm25 - min_bm25
+    range_bm25 = 1.0 if range_bm25.zero?
+
+    raw_docs.each do |d|
+      d.norm_bm25 = (d.score - min_bm25) / range_bm25
+    end
+
+    #
+    # ======================================================
     # Compute keyword similarity score (manual overlap)
     # ======================================================
     #
@@ -91,25 +106,17 @@ class DocumentsElasticController < ApplicationController
       doc_keywords = (doc.style_keywords || []).map(&:downcase)
 
       overlap = (doc_keywords & query_keywords).size
-      union = (doc_keywords | query_keywords).size
+      union   = (doc_keywords | query_keywords).size
 
-      kw_score =
-        if union.zero?
-          0.0
-        else
-          overlap.to_f / union
-        end
-
-      doc.keyword_score = kw_score
+      doc.keyword_score =
+        union.zero? ? 0.0 : overlap.to_f / union
     end
 
     #
     # Normalize keyword scores
     #
-    max_kw = raw_docs.map { |d| d.keyword_score }.max || 1.0
-    raw_docs.each do |d|
-      d.keyword_score = d.keyword_score / max_kw
-    end
+    max_kw = raw_docs.map(&:keyword_score).max || 1.0
+    raw_docs.each { |d| d.keyword_score /= max_kw }
 
     #
     # ======================================================
@@ -117,7 +124,7 @@ class DocumentsElasticController < ApplicationController
     # ======================================================
     #
     raw_docs.each do |d|
-      d.hybrid_score = (1.0 - weight) * d.score.to_f +
+      d.hybrid_score = (1.0 - weight) * d.norm_bm25 +
                        weight * d.keyword_score
     end
 
