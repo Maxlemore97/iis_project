@@ -3,6 +3,65 @@
     .col-md-8
       %h1.mb-3 Documents
 
+    / ----------------------------------------------------
+    / INFO ACCORDION — FOR NON-TECHNICAL USERS
+    / ----------------------------------------------------
+    .accordion.mb-4#infoAccordion
+      .accordion-item
+        %h2.accordion-header#infoHeading
+          %button.accordion-button.collapsed{
+            type: "button",
+            data: { bs_toggle: "collapse", bs_target: "#infoCollapse" },
+            aria: { expanded: "false", controls: "infoCollapse" }
+          }
+            How does standard Elasticsearch search work?
+
+        .accordion-collapse.collapse#infoCollapse{
+          aria: { labelledby: "infoHeading" },
+          data: { bs_parent: "#infoAccordion" }
+        }
+          .accordion-body
+            %p
+              This page uses the normal Elasticsearch search mechanism. No style vectors,
+              no keyword similarity — just pure text relevance using an algorithm called
+              %strong BM25.
+
+            %p.mt-3
+              BM25 estimates how well a document matches your query based on:
+            %ul
+              %li
+                %strong Term frequency:
+                How often your search words appear in the document.
+              %li
+                %strong Inverse document frequency:
+                Words that appear in fewer documents count more.
+              %li
+                %strong Length normalization:
+                Very long documents are slightly down-weighted.
+
+            %p.mt-3
+              The search results below show:
+            %ul
+              %li The document title and ID
+              %li A preview snippet of the document body
+              %li The BM25 score used for ranking the results
+
+            %p.mt-3
+              You can also export the top results for all queries in the standard
+              %code .trec
+              evaluation format used in information-retrieval research.
+
+            = link_to "Download TREC Results",
+              export_trec_documents_path,
+              class: "btn btn-success my-3"
+
+
+
+  / ----------------------------------------------------
+  / SEARCH FORM
+  / ----------------------------------------------------
+  .row.mb-4
+    .col-md-8
       = form_with url: documents_path, method: :get, local: true, class: "d-flex gap-2" do |f|
         = f.select :query_id,
             @queries.map { |q| [ "#{q.trec_id} – #{q.title.truncate(50)}", q.id ] },
@@ -11,21 +70,29 @@
 
         = f.submit "Search", class: "btn btn-primary"
 
+
+  / ----------------------------------------------------
+  / SEARCH SUMMARY
+  / ----------------------------------------------------
   - if @searched
     %h5.mt-3.mb-3
       = "Search results for query ##{@query_doc.trec_id}"
       %span.badge.bg-secondary= "#{@documents.size} hits"
 
-      %p.text-muted.mt-2
-        %strong Query Text:
-        = @query[0..200]
-        - if @query.length > 200
-          %em … truncated …
+    %p.text-muted.mt-2
+      %strong Query Text:
+      = @query[0..200]
+      - if @query.length > 200
+        %em … truncated …
 
   - else
     %h5.mt-3.mb-3.text-muted
       Showing 20 random documents
 
+
+  / ----------------------------------------------------
+  / RESULTS LIST
+  / ----------------------------------------------------
   - if @documents.any?
     .list-group
       - @documents.each do |doc|

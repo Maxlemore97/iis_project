@@ -19,9 +19,23 @@ Rails.application.routes.draw do
   get "/vectors", to: "vectors#index"
   get "/keywords", to: "keywords#index"
 
-  get "documents" => "documents#index"
-  resources :documents_hybrid, only: [:index]
-  resources :documents_elastic, only: [:index]
+  resources :documents, only: [:index] do
+    collection do
+      get :export_trec
+    end
+  end
+
+  resources :documents_hybrid, only: [:index] do
+    collection do
+      get :export_trec
+    end
+  end
+
+  resources :documents_elastic, only: [:index] do
+    collection do
+      get :export_trec
+    end
+  end
 
   # Defines the root path route ("/")
   # root "posts#index"

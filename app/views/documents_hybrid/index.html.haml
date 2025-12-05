@@ -36,6 +36,8 @@
               %li The position based only on writing-style similarity
               %li The final hybrid ranking
 
+            = link_to "Download TREC Results", export_trec_documents_hybrid_index_path, class: "btn btn-success my-3"
+
   .row.mb-4
     .col-md-8
       = form_with url: documents_hybrid_index_path, method: :get, local: true, class: "row g-3" do |f|
@@ -80,7 +82,7 @@
 
           - if @searched
             %div.mt-2
-              %span.badge.bg-info.text-dark BM25: #{doc.bm25_score.round(3)}
+              %span.badge.bg-info.text-dark BM25: #{doc.norm_score.round(3)}
               %span.badge.bg-warning.text-dark Vector: #{doc.vector_score.round(3)}
               %span.badge.bg-success Hybrid: #{doc.hybrid_score.round(3)}
 
